@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Data Analyst Agent Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                </svg>
+                <span>DataAnalyst.AI</span>
+            </div>
+            
+            <nav class="sidebar-menu">
+                <a href="#upload-section" class="menu-item active" id="btn-nav-upload">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="menu-icon">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                    <span>Upload & Preview</span>
+                </a>
+                <a href="#cleaning-section" class="menu-item" id="btn-nav-cleaning">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="menu-icon">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                    <span>Scrub & Profile</span>
+                </a>
+                <a href="#charts-section" class="menu-item" id="btn-nav-charts">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="menu-icon">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="9" y1="17" x2="9" y2="9"></line>
+                        <line x1="13" y1="17" x2="13" y2="13"></line>
+                        <line x1="17" y1="17" x2="17" y2="11"></line>
+                    </svg>
+                    <span>Visualizations</span>
+                </a>
+                <a href="#sql-section" class="menu-item" id="btn-nav-sql">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="menu-icon">
+                        <polyline points="16 18 22 12 16 6"></polyline>
+                        <polyline points="8 6 2 12 8 18"></polyline>
+                    </svg>
+                    <span>SQL Query Terminal</span>
+                </a>
+                <a href="#insights-section" class="menu-item" id="btn-nav-insights">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="menu-icon">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                    </svg>
+                    <span>AI Insights & Power BI</span>
+                </a>
+                <a href="#history-section" class="menu-item" id="btn-nav-history">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="menu-icon">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span>Analysis History</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <p>MVP Version 1.0.0</p>
+                <p>Connected to Local SQLite</p>
+            </div>
+        </aside>
+
+        <!-- Main Display Pane -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="header-title">
+                    <h1 id="page-title">Upload Excel Datasets</h1>
+                    <p class="subtitle" id="page-subtitle">Add Excel tables to clean, profile, and search using AI-generated SQL queries.</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-primary" id="btn-trigger-pipeline" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        Run Complete AI Analysis
+                    </button>
+                    <button class="btn btn-secondary" id="btn-download-report" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download MD Report
+                    </button>
+                </div>
+            </header>
+
+            <!-- Notification Toast -->
+            <div id="toast-notification" class="toast hidden">
+                <span id="toast-message">Notification message here</span>
+            </div>
+
+            <!-- Page Sections -->
+            <div class="content-body">
+                
+                <!-- 1. UPLOAD & PREVIEW SECTION -->
+                <section id="upload-section" class="panel active">
+                    <div class="grid grid-2">
+                        <!-- Left Pane: Dropzone -->
+                        <div class="card glass">
+                            <div class="card-header">
+                                <h3>Data File Uploader</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="drop-zone" id="file-dropzone">
+                                    <div class="drop-zone-content">
+                                        <svg class="upload-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                            <polyline points="17 8 12 3 7 8"></polyline>
+                                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                                        </svg>
+                                        <p class="dropzone-text">Drag and drop your <strong>Excel (.xlsx)</strong> or <strong>CSV (.csv)</strong> files here</p>
+                                        <p class="dropzone-sub">or click to browse from folders</p>
+                                        <input type="file" id="file-input" accept=".xlsx,.csv" multiple style="display: none;">
+                                    </div>
+                                </div>
+                                
+                                <div class="progress-container hidden" id="upload-progress-container">
+                                    <div class="progress-bar-info">
+                                        <span id="upload-status-label">Uploading files...</span>
+                                        <span id="upload-percent">0%</span>
+                                    </div>
+                                    <div class="progress-bar-track">
+                                        <div class="progress-bar-fill" id="upload-progress-fill"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Pane: Uploaded Files details -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Target Files Queue</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="empty-state" id="uploaded-files-empty">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                        <polyline points="14 2 14 8 20 8"></polyline>
+                                        <line x1="9" y1="15" x2="15" y2="15"></line>
+                                        <line x1="9" y1="11" x2="15" y2="11"></line>
+                                    </svg>
+                                    <p>No files loaded into cache yet</p>
+                                </div>
+                                <ul class="file-list hidden" id="uploaded-files-list"></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dataset Preview Table -->
+                    <div class="card mt-6">
+                        <div class="card-header flex-header">
+                            <div>
+                                <h3>Data Preview Table</h3>
+                                <p class="card-subtitle">Showing initial top 10 loaded rows of the active worksheet.</p>
+                            </div>
+                            <span class="badge" id="badge-sheet-name">No sheet selected</span>
+                        </div>
+                        <div class="card-body overflow-x">
+                            <div class="empty-state" id="table-preview-empty">
+                                <p>Upload files to view a structure preview.</p>
+                            </div>
+                            <table class="data-table hidden" id="data-preview-table">
+                                <thead id="data-preview-thead"></thead>
+                                <tbody id="data-preview-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. SCRUB & PROFILE SECTION -->
+                <section id="cleaning-section" class="panel">
+                    <!-- Cleaning Cards -->
+                    <div class="grid grid-4" id="cleaning-cards">
+                        <div class="stat-card">
+                            <div class="stat-icon bg-blue">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                </svg>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Final Shape</span>
+                                <span class="stat-value" id="val-final-shape">-</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-green">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                </svg>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Duplicates Scrubbed</span>
+                                <span class="stat-value" id="val-duplicates-removed">-</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-yellow">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                                </svg>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Missing Values Imputed</span>
+                                <span class="stat-value" id="val-missing-imputed">-</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bg-red">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                </svg>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-label">Empty Rows Dropped</span>
+                                <span class="stat-value" id="val-empty-rows">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-3 mt-6">
+                        <!-- Left Block: Cleaning Actions list -->
+                        <div class="card col-span-1">
+                            <div class="card-header">
+                                <h3>Data Scrubbing Operations</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="empty-state" id="cleaning-actions-empty">
+                                    <p>Run analysis to see scrubbing actions list.</p>
+                                </div>
+                                <ul class="action-list hidden" id="cleaning-actions-list"></ul>
+                            </div>
+                        </div>
+
+                        <!-- Right Block: Detailed Profiling Column Statistics -->
+                        <div class="card col-span-2">
+                            <div class="card-header">
+                                <h3>Field Profiling Summary</h3>
+                            </div>
+                            <div class="card-body overflow-x">
+                                <div class="empty-state" id="profiling-table-empty">
+                                    <p>Run analysis to view detailed field profiles.</p>
+                                </div>
+                                <table class="data-table hidden" id="profiling-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Field Name</th>
+                                            <th>Type</th>
+                                            <th>Non-Nulls</th>
+                                            <th>Nulls</th>
+                                            <th>Uniques</th>
+                                            <th>Summary Stats / Categorical Metrics</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="profiling-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. VISUALIZATIONS SECTION -->
+                <section id="charts-section" class="panel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Automatically Generated AI Chart Gallery</h3>
+                            <p class="card-subtitle">AI scans numeric/categorical mappings to generate four tailored plotly chart images.</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="empty-state" id="charts-gallery-empty">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                    <polyline points="21 15 16 10 5 21"></polyline>
+                                </svg>
+                                <p>Run pipeline analysis to build and view charts.</p>
+                            </div>
+                            <div class="charts-grid hidden" id="charts-gallery">
+                                <!-- Chart PNG slots -->
+                                <div class="chart-card">
+                                    <h4 id="chart-title-0">Bar Chart</h4>
+                                    <div class="img-container">
+                                        <img id="chart-img-0" src="" alt="Bar Chart">
+                                    </div>
+                                </div>
+                                <div class="chart-card">
+                                    <h4 id="chart-title-1">Line Chart</h4>
+                                    <div class="img-container">
+                                        <img id="chart-img-1" src="" alt="Line Chart">
+                                    </div>
+                                </div>
+                                <div class="chart-card">
+                                    <h4 id="chart-title-2">Pie Chart</h4>
+                                    <div class="img-container">
+                                        <img id="chart-img-2" src="" alt="Pie Chart">
+                                    </div>
+                                </div>
+                                <div class="chart-card">
+                                    <h4 id="chart-title-3">Histogram</h4>
+                                    <div class="img-container">
+                                        <img id="chart-img-3" src="" alt="Histogram">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. SQL QUERY TERMINAL SECTION -->
+                <section id="sql-section" class="panel">
+                    <!-- Standard synthesized SQL queries -->
+                    <div class="card mb-6">
+                        <div class="card-header">
+                            <h3>Synthesized Database Query Examples</h3>
+                            <p class="card-subtitle">Standard business query snippets automatically created based on columns schema.</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="empty-state" id="sql-examples-empty">
+                                <p>Run pipeline analysis to populate SQL suggestions.</p>
+                            </div>
+                            <div class="sql-examples-grid hidden" id="sql-examples-list"></div>
+                        </div>
+                    </div>
+
+                    <!-- Sandbox interactive terminal -->
+                    <div class="grid grid-3">
+                        <!-- Query execution terminal -->
+                        <div class="card col-span-1">
+                            <div class="card-header">
+                                <h3>Natural Language SQL Sandbox</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="sql-nl-input">Ask a question about the active dataset:</label>
+                                    <textarea class="form-control" id="sql-nl-input" rows="4" placeholder="e.g., Show the average sales grouped by city or region..."></textarea>
+                                </div>
+                                <button class="btn btn-primary w-full mt-4" id="btn-run-query" disabled>
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="btn-icon">
+                                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                    </svg>
+                                    Query Dataset
+                                </button>
+                                
+                                <div class="query-sql-display hidden" id="query-sql-box">
+                                    <h5>Generated SQL Script:</h5>
+                                    <pre><code id="query-sql-code">SELECT ...</code></pre>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Response and outputs -->
+                        <div class="card col-span-2">
+                            <div class="card-header">
+                                <h3>Query Output Panel</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="empty-state" id="query-output-empty">
+                                    <p>Submit a question to see the AI response and SQL results.</p>
+                                </div>
+                                <div class="query-output-container hidden" id="query-output-container">
+                                    <div class="answer-box">
+                                        <h5>AI Synthesis Answer:</h5>
+                                        <p id="query-answer-text">Answer will appear here...</p>
+                                    </div>
+                                    <div class="overflow-x mt-4">
+                                        <h5>Results Grid:</h5>
+                                        <table class="data-table" id="query-results-table">
+                                            <thead id="query-results-thead"></thead>
+                                            <tbody id="query-results-tbody"></tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. AI INSIGHTS & POWER BI SECTION -->
+                <section id="insights-section" class="panel">
+                    <div class="grid grid-2">
+                        <!-- Business Insights -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>AI business Insights</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="empty-state" id="insights-empty">
+                                    <p>Run analysis pipeline to generate business insights.</p>
+                                </div>
+                                <div class="insights-container hidden" id="insights-container">
+                                    <div class="insight-block">
+                                        <h4 class="text-blue">📊 Key Observations</h4>
+                                        <ul id="list-key-observations"></ul>
+                                    </div>
+                                    <div class="insight-block mt-4">
+                                        <h4 class="text-yellow">🛡️ Data Quality Notes</h4>
+                                        <ul id="list-data-quality"></ul>
+                                    </div>
+                                    <div class="insight-block mt-4">
+                                        <h4 class="text-green">💡 Actionable Recommendations</h4>
+                                        <ul id="list-recommendations"></ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Power BI Recommendations -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Power BI Dashboard Design Layout</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="empty-state" id="pbi-empty">
+                                    <p>Run analysis pipeline to view Power BI recommendations.</p>
+                                </div>
+                                <div class="pbi-container hidden" id="pbi-container">
+                                    <div class="pbi-section">
+                                        <h5>Recommended KPI Cards</h5>
+                                        <ul class="pbi-list" id="pbi-kpi-list"></ul>
+                                    </div>
+                                    <div class="pbi-section mt-4">
+                                        <h5>Suggested Visualizations Grid</h5>
+                                        <ul class="pbi-list" id="pbi-visual-list"></ul>
+                                    </div>
+                                    <div class="pbi-section mt-4">
+                                        <h5>Suggested Slicers / Filters</h5>
+                                        <ul class="pbi-list" id="pbi-filter-list"></ul>
+                                    </div>
+                                    <div class="layout-advice-box mt-4">
+                                        <h5>Dashboard Design Flow Advice</h5>
+                                        <p id="pbi-layout-advice"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. ANALYSIS HISTORY SECTION -->
+                <section id="history-section" class="panel">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>SQLite Analysis Run History</h3>
+                            <p class="card-subtitle">List of previously generated analysis records and markdown report details.</p>
+                        </div>
+                        <div class="card-body overflow-x">
+                            <div class="empty-state" id="history-empty">
+                                <p>No previous analysis entries in SQLite database.</p>
+                            </div>
+                            <table class="data-table hidden" id="history-table">
+                                <thead>
+                                    <tr>
+                                        <th>Run ID</th>
+                                        <th>Dataset Filename</th>
+                                        <th>Analyzed Date</th>
+                                        <th>Rows Count</th>
+                                        <th>Cols Count</th>
+                                        <th>Nulls Scrubbed</th>
+                                        <th>Duplicates Scrubbed</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="history-tbody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
