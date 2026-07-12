@@ -115,3 +115,10 @@ http://127.0.0.1:8000/
 6. **Insight Agent**: Extracts key data performance metrics, outlines observations, details caveats, and gives actionable tips.
 7. **Dashboard Agent**: Recommends Power BI KPIs, charts assignments, slicers, and colors logic.
 8. **Report Agent**: Synthesizes all summaries and details into a downloadable Markdown (.md) document.
+
+---
+
+## Author
+
+- **Kuldeep Kumar Mishra**
+
